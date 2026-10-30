@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naveen Kumar N | NFVi Cloud Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:   #000000;
+  --black2:  #060608;
+  --black3:  #0A0B10;
+  --black4:  #0E0F18;
+  --black5:  #12141E;
+  --cobalt:  #1A6BFF;
+  --cobalt2: #2979FF;
+  --cobalt3: #5B8FFF;
+  --cobaltG: rgba(26,107,255,0.12);
+  --lime:    #AAFF00;
+  --lime2:   #CCFF33;
+  --lime3:   rgba(170,255,0,0.15);
+  --limeG:   rgba(170,255,0,0.08);
+  --border:  rgba(26,107,255,0.18);
+  --borderL: rgba(170,255,0,0.14);
+  --text:    #F2F5FF;
+  --text2:   #7A8BB0;
+  --text3:   #3A4560;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--text);overflow-x:hidden;cursor:none;}
+
+/* ─── CURSOR ─── */
+#cursor{
+  position:fixed;width:12px;height:12px;
+  background:var(--lime);border-radius:50%;
+  pointer-events:none;z-index:9999;
+  mix-blend-mode:exclusion;
+  transition:transform 0.12s,width 0.2s,height 0.2s;
+}
+#cursor-ring{
+  position:fixed;width:40px;height:40px;
+  border:1.5px solid var(--cobalt);border-radius:50%;
+  pointer-events:none;z-index:9998;
+  transition:width 0.25s,height 0.25s,border-color 0.3s;
+}
+
+/* ─── ANIMATED BACKGROUND ─── */
+.bg-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+
+/* Scanlines */
+.bg-wrap::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,transparent 2px,
+    rgba(26,107,255,0.015) 2px,rgba(26,107,255,0.015) 4px
+  );
+  pointer-events:none;z-index:2;
+  animation:scanPan 12s linear infinite;
+}
+@keyframes scanPan{0%{background-position:0 0;}100%{background-position:0 200px;}}
+
+/* Grid */
+.bg-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(26,107,255,0.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(26,107,255,0.06) 1px,transparent 1px);
+  background-size:80px 80px;
+  animation:gridPulse 6s ease-in-out infinite;
+}
+@keyframes gridPulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
+
+/* Orbs */
+.bg-orb{position:absolute;border-radius:50%;filter:blur(100px);will-change:transform;}
+.orb-c1{width:700px;height:700px;background:radial-gradient(circle,rgba(26,107,255,0.14),transparent 65%);top:-150px;left:-200px;animation:orbA 14s ease-in-out infinite;}
+.orb-c2{width:500px;height:500px;background:radial-gradient(circle,rgba(26,107,255,0.10),transparent 65%);bottom:-100px;right:-150px;animation:orbB 11s ease-in-out infinite;}
+.orb-l1{width:300px;height:300px;background:radial-gradient(circle,rgba(170,255,0,0.07),transparent 65%);top:30%;right:10%;animation:orbC 9s ease-in-out infinite;}
+.orb-l2{width:200px;height:200px;background:radial-gradient(circle,rgba(170,255,0,0.05),transparent 65%);bottom:20%;left:15%;animation:orbA 13s ease-in-out infinite reverse;}
+@keyframes orbA{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,-50px);}}
+@keyframes orbB{0%,100%{transform:translate(0,0);}50%{transform:translate(-50px,30px);}}
+@keyframes orbC{0%,100%{transform:translate(0,0);}50%{transform:translate(20px,40px);}}
+
+/* Particles */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;}
+.particle{position:absolute;border-radius:50%;animation:floatP linear infinite;opacity:0;}
+@keyframes floatP{
+  0%{transform:translateY(105vh) translateX(0) scale(0);opacity:0;}
+  8%{opacity:1;}92%{opacity:0.5;}
+  100%{transform:translateY(-10vh) translateX(var(--drift)) scale(1);opacity:0;}
+}
+
+/* ─── PROGRESS BAR ─── */
+#progress{
+  position:fixed;top:0;left:0;right:0;height:2px;z-index:1000;
+  background:linear-gradient(90deg,var(--cobalt),var(--lime),var(--cobalt2));
+  background-size:200% 100%;
+  transform-origin:left;transform:scaleX(0);
+  animation:gradMove 3s linear infinite;
+}
+@keyframes gradMove{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:14px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  transition:padding 0.3s;
+}
+.nav-logo{
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  color:var(--lime);letter-spacing:3px;
+  display:flex;align-items:center;gap:10px;
+}
+.logo-brace{color:var(--cobalt);}
+.nav-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--lime);
+  box-shadow:0 0 8px var(--lime);
+  animation:pulseLime 2s infinite;
+}
+@keyframes pulseLime{0%,100%{box-shadow:0 0 4px var(--lime);}50%{box-shadow:0 0 12px var(--lime),0 0 24px rgba(170,255,0,0.3);}}
+.nav-links{display:flex;gap:32px;list-style:none;align-items:center;}
+.nav-links a{
+  font-size:11px;font-weight:500;color:var(--text2);
+  text-decoration:none;letter-spacing:1.5px;text-transform:uppercase;
+  position:relative;transition:color 0.3s;padding:4px 0;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--cobalt),var(--lime));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.nav-links a:hover{color:var(--lime);}
+.nav-links a:hover::after{transform:scaleX(1);}
+.nav-cta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  padding:7px 18px;border:1px solid rgba(170,255,0,0.3);
+  border-radius:4px;color:var(--lime);text-decoration:none;
+  letter-spacing:1px;
+  transition:background 0.2s,box-shadow 0.2s;
+  position:relative;overflow:hidden;
+}
+.nav-cta::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(170,255,0,0.08),transparent);
+  opacity:0;transition:opacity 0.2s;
+}
+.nav-cta:hover::before{opacity:1;}
+.nav-cta:hover{box-shadow:0 0 16px rgba(170,255,0,0.2);}
+
+/* ─── HERO ─── */
+#home{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:120px 48px 80px;position:relative;z-index:2;overflow:hidden;
+}
+
+.hero-content{max-width:1000px;width:100%;position:relative;z-index:2;}
+
+/* CHIP */
+.hero-chip{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(26,107,255,0.08);
+  border:1px solid rgba(26,107,255,0.25);
+  border-radius:100px;padding:6px 18px 6px 10px;
+  margin-bottom:32px;
+  opacity:0;transform:translateY(16px);animation:fadeUp 0.7s 0.2s forwards;
+}
+.chip-dot{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime);animation:pulseLime 2s infinite;}
+.chip-txt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cobalt3);letter-spacing:1px;}
+.chip-sep{width:1px;height:14px;background:rgba(26,107,255,0.2);}
+.chip-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);}
+
+/* NAME */
+.hero-name{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(44px,8vw,96px);
+  font-weight:700;line-height:0.95;letter-spacing:-3px;
+  white-space:nowrap;margin-bottom:20px;
+  opacity:0;transform:translateY(28px);animation:fadeUp 0.9s 0.35s forwards;
+}
+.hn-first{color:var(--text);}
+.hn-last{
+  color:var(--cobalt);
+  text-shadow:0 0 40px rgba(26,107,255,0.5),0 0 80px rgba(26,107,255,0.25);
+  animation:cobalGlow 4s ease-in-out infinite;
+}
+@keyframes cobalGlow{
+  0%,100%{text-shadow:0 0 40px rgba(26,107,255,0.5),0 0 80px rgba(26,107,255,0.25);}
+  50%{text-shadow:0 0 60px rgba(26,107,255,0.8),0 0 120px rgba(26,107,255,0.4),0 0 200px rgba(26,107,255,0.15);}
+}
+
+/* TAGS */
+.hero-role{
+  font-size:clamp(13px,1.8vw,17px);color:var(--text2);
+  margin-bottom:20px;
+  opacity:0;animation:fadeUp 0.8s 0.55s forwards;
+  letter-spacing:0.3px;
+}
+.hero-tags{
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px;
+  opacity:0;animation:fadeUp 0.8s 0.65s forwards;
+}
+.ht{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  padding:4px 12px;border-radius:3px;border:1px solid;
+  transition:all 0.2s;cursor:default;
+}
+.ht:hover{transform:translateY(-1px);}
+.ht-blue{color:var(--cobalt3);border-color:rgba(26,107,255,0.25);background:rgba(26,107,255,0.07);}
+.ht-blue:hover{box-shadow:0 0 12px rgba(26,107,255,0.3);border-color:var(--cobalt);}
+.ht-lime{color:var(--lime);border-color:rgba(170,255,0,0.2);background:rgba(170,255,0,0.04);}
+.ht-lime:hover{box-shadow:0 0 12px rgba(170,255,0,0.25);border-color:var(--lime);}
+
+/* TERMINAL */
+.terminal{
+  background:var(--black3);
+  border:1px solid rgba(26,107,255,0.2);
+  border-radius:12px;overflow:hidden;
+  margin-bottom:40px;
+  opacity:0;transform:translateY(20px);animation:fadeUp 0.9s 0.75s forwards;
+  box-shadow:
+    0 0 0 1px rgba(26,107,255,0.06),
+    0 24px 64px rgba(0,0,0,0.7),
+    0 0 60px rgba(26,107,255,0.05),
+    inset 0 1px 0 rgba(26,107,255,0.1);
+  position:relative;
+}
+/* Lime corner accent */
+.terminal::before{
+  content:'';position:absolute;top:0;right:0;
+  width:80px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--lime));
+  z-index:1;
+}
+.terminal::after{
+  content:'';position:absolute;top:0;right:0;
+  width:2px;height:80px;
+  background:linear-gradient(180deg,var(--lime),transparent);
+  z-index:1;
+}
+.tbar{
+  background:rgba(10,11,16,0.95);padding:11px 16px;
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid rgba(26,107,255,0.12);
+}
+.td{width:12px;height:12px;border-radius:50%;}
+.td-r{background:#FF453A;box-shadow:0 0 5px rgba(255,69,58,0.5);}
+.td-y{background:#FFD60A;box-shadow:0 0 5px rgba(255,214,10,0.5);}
+.td-g{background:#32D74B;box-shadow:0 0 5px rgba(50,215,75,0.5);}
+.ttitle{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--text3);margin:0 auto;letter-spacing:0.5px;
+}
+.tbody{padding:24px 28px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2.1;}
+.tp{color:var(--lime);}
+.tc{color:var(--text);}
+.to{color:var(--text2);padding-left:16px;display:block;}
+.tk{color:var(--cobalt3);}
+.tv{color:#8FBBFF;}
+.tn{color:var(--lime);}
+.tcm{color:var(--text3);}
+.cursor-blink{
+  display:inline-block;width:8px;height:14px;
+  background:var(--lime);vertical-align:middle;
+  box-shadow:0 0 8px var(--lime);
+  animation:blink 1s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* ACTIONS */
+.hero-actions{
+  display:flex;gap:14px;flex-wrap:wrap;
+  opacity:0;animation:fadeUp 0.8s 0.95s forwards;
+}
+.btn-cobalt{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:13px 26px;
+  background:var(--cobalt);
+  color:#fff;font-weight:600;font-size:13px;
+  border-radius:6px;text-decoration:none;border:none;cursor:none;
+  letter-spacing:0.3px;
+  transition:transform 0.2s,box-shadow 0.2s;
+  position:relative;overflow:hidden;
+}
+.btn-cobalt::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.12),transparent);
+}
+.btn-cobalt:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(26,107,255,0.5),0 0 50px rgba(26,107,255,0.2);
+}
+.btn-lime{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 26px;
+  background:transparent;
+  color:var(--lime);font-weight:600;font-size:13px;
+  border:1.5px solid var(--lime);
+  border-radius:6px;text-decoration:none;cursor:none;
+  letter-spacing:0.3px;
+  transition:transform 0.2s,box-shadow 0.2s,background 0.2s;
+}
+.btn-lime:hover{
+  transform:translateY(-2px);
+  background:rgba(170,255,0,0.08);
+  box-shadow:0 8px 28px rgba(170,255,0,0.25),0 0 40px rgba(170,255,0,0.1);
+}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 26px;
+  background:transparent;
+  color:var(--text2);font-weight:500;font-size:13px;
+  border:1px solid var(--border);
+  border-radius:6px;text-decoration:none;cursor:none;
+  letter-spacing:0.3px;
+  transition:border-color 0.2s,color 0.2s,transform 0.2s;
+}
+.btn-ghost:hover{
+  border-color:var(--cobalt3);color:var(--cobalt3);
+  transform:translateY(-2px);
+}
+
+/* ─── TICKER ─── */
+.ticker-wrap{
+  overflow:hidden;padding:13px 0;
+  border-top:1px solid rgba(26,107,255,0.1);
+  border-bottom:1px solid rgba(26,107,255,0.1);
+  position:relative;z-index:2;
+  background:rgba(0,0,0,0.6);
+}
+.ticker{display:flex;animation:tick 38s linear infinite;white-space:nowrap;}
+.ticker:hover{animation-play-state:paused;}
+.tki{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  padding:0 22px;flex-shrink:0;
+  display:flex;align-items:center;gap:14px;
+}
+.tdot2{width:4px;height:4px;border-radius:50%;}
+@keyframes tick{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ─── STATS ─── */
+.stats-strip{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  max-width:1100px;margin:0 auto;
+  border:1px solid var(--border);border-radius:16px;overflow:hidden;
+}
+.stat-item{
+  background:var(--black4);padding:36px 24px;
+  text-align:center;position:relative;overflow:hidden;
+  border-right:1px solid var(--border);
+  transition:background 0.3s;
+}
+.stat-item:last-child{border-right:none;}
+.stat-item:hover{background:var(--black5);}
+.stat-shine{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:80%;height:1px;opacity:0;transition:opacity 0.3s;
+}
+.stat-item:hover .stat-shine{opacity:1;}
+.stat-icon{font-size:20px;margin-bottom:10px;display:block;}
+.stat-num{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:40px;font-weight:700;line-height:1;margin-bottom:8px;
+}
+.stat-label{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:0.5px;text-transform:uppercase;}
+
+.s1 .stat-num{color:var(--cobalt);text-shadow:0 0 20px rgba(26,107,255,0.4);}
+.s1 .stat-shine{background:linear-gradient(90deg,transparent,var(--cobalt),transparent);}
+.s2 .stat-num{color:var(--lime);text-shadow:0 0 20px rgba(170,255,0,0.3);}
+.s2 .stat-shine{background:linear-gradient(90deg,transparent,var(--lime),transparent);}
+.s3 .stat-num{color:var(--cobalt2);text-shadow:0 0 20px rgba(41,121,255,0.4);}
+.s3 .stat-shine{background:linear-gradient(90deg,transparent,var(--cobalt2),transparent);}
+.s4 .stat-num{color:var(--lime2);text-shadow:0 0 20px rgba(204,255,51,0.3);}
+.s4 .stat-shine{background:linear-gradient(90deg,transparent,var(--lime2),transparent);}
+
+/* ─── SECTIONS ─── */
+.sw{position:relative;z-index:2;padding:100px 48px;max-width:1100px;margin:0 auto;}
+.ey{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:4px;text-transform:uppercase;
+  margin-bottom:12px;display:flex;align-items:center;gap:10px;
+}
+.ey::before{content:'//';color:var(--text3);}
+.ey-blue{color:var(--cobalt);}
+.ey-lime{color:var(--lime);}
+.st{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(28px,4vw,42px);font-weight:700;
+  letter-spacing:-1.5px;margin-bottom:52px;
+}
+
+/* ─── TIMELINE ─── */
+.timeline{position:relative;}
+.timeline::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:1px;
+  background:linear-gradient(180deg,var(--cobalt) 0%,var(--lime) 60%,transparent 100%);
+  opacity:0.3;
+}
+.tl-item{
+  padding-left:40px;margin-bottom:48px;position:relative;
+  opacity:0;transform:translateX(-24px);
+  transition:opacity 0.6s,transform 0.6s;
+}
+.tl-item.visible{opacity:1;transform:translateX(0);}
+.tl-dot{
+  position:absolute;left:-5px;top:8px;
+  width:11px;height:11px;
+  background:var(--black);border:2px solid var(--cobalt);border-radius:50%;
+  box-shadow:0 0 12px rgba(26,107,255,0.6);
+  transition:transform 0.3s,box-shadow 0.3s,border-color 0.3s;
+}
+.tl-item:hover .tl-dot{
+  transform:scale(1.6);
+  border-color:var(--lime);
+  box-shadow:0 0 20px rgba(170,255,0,0.6);
+}
+
+.exp-card{
+  background:var(--black4);
+  border:1px solid var(--border);
+  border-radius:14px;padding:32px;
+  transition:border-color 0.3s,box-shadow 0.3s,transform 0.3s;
+  position:relative;overflow:hidden;
+}
+.exp-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(26,107,255,0.03) 0%,transparent 50%);
+  opacity:0;transition:opacity 0.3s;
+}
+/* Animated left border line */
+.exp-card::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--cobalt),var(--lime));
+  transform:scaleY(0);transform-origin:top;
+  transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+  border-radius:0 2px 2px 0;
+}
+.exp-card:hover::after{transform:scaleY(1);}
+.exp-card:hover{
+  border-color:rgba(26,107,255,0.35);
+  box-shadow:0 0 0 1px rgba(26,107,255,0.08),0 20px 48px rgba(0,0,0,0.6),0 0 60px rgba(26,107,255,0.06);
+  transform:translateY(-2px);
+}
+.exp-card:hover::before{opacity:1;}
+
+.exp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;flex-wrap:wrap;gap:12px;}
+.exp-role{font-size:19px;font-weight:700;color:var(--text);font-family:'Space Grotesk',sans-serif;}
+.exp-period{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--lime);background:rgba(170,255,0,0.07);
+  border:1px solid rgba(170,255,0,0.2);
+  padding:4px 12px;border-radius:100px;white-space:nowrap;
+}
+.exp-company{font-size:13px;color:var(--text2);margin-bottom:4px;}
+.exp-proj{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cobalt3);margin-bottom:22px;}
+.exp-bullets{list-style:none;}
+.exp-bullets li{
+  padding:7px 0 7px 20px;color:var(--text2);
+  font-size:13.5px;line-height:1.7;position:relative;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+.exp-bullets li::before{
+  content:'▸';position:absolute;left:0;
+  color:var(--cobalt);font-size:10px;top:10px;
+}
+.exp-bullets li:last-child{border-bottom:none;}
+.exp-bullets li strong{color:var(--lime);font-weight:600;}
+
+/* ─── ACHIEVEMENTS ─── */
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:52px;}
+.ach-card{
+  border-radius:12px;padding:24px 18px;text-align:center;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.5s,transform 0.5s,box-shadow 0.3s;
+  position:relative;overflow:hidden;border:1px solid;
+}
+.ach-card.visible{opacity:1;transform:translateY(0);}
+.ach-card:hover{transform:translateY(-4px);}
+
+/* Shimmer sweep on hover */
+.ach-card::before{
+  content:'';position:absolute;top:-100%;left:-60%;
+  width:40%;height:300%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,0.06),transparent);
+  transform:skewX(-20deg);
+  transition:left 0.5s;
+}
+.ach-card:hover::before{left:130%;}
+
+.ac-blue{background:rgba(26,107,255,0.06);border-color:rgba(26,107,255,0.18);}
+.ac-blue:hover{box-shadow:0 0 30px rgba(26,107,255,0.15),0 8px 24px rgba(0,0,0,0.4);}
+.ac-blue .ach-val{color:var(--cobalt);text-shadow:0 0 20px rgba(26,107,255,0.4);}
+
+.ac-lime{background:rgba(170,255,0,0.04);border-color:rgba(170,255,0,0.15);}
+.ac-lime:hover{box-shadow:0 0 30px rgba(170,255,0,0.12),0 8px 24px rgba(0,0,0,0.4);}
+.ac-lime .ach-val{color:var(--lime);text-shadow:0 0 20px rgba(170,255,0,0.35);}
+
+.ac-mix{background:linear-gradient(135deg,rgba(26,107,255,0.05),rgba(170,255,0,0.03));border-color:rgba(26,107,255,0.15);}
+.ac-mix:hover{box-shadow:0 0 30px rgba(26,107,255,0.1),0 8px 24px rgba(0,0,0,0.4);}
+.ac-mix .ach-val{
+  background:linear-gradient(135deg,var(--cobalt),var(--lime));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.ach-val{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:36px;font-weight:700;line-height:1;margin-bottom:8px;
+}
+.ach-label{font-size:11px;color:var(--text2);font-weight:500;line-height:1.6;}
+
+/* AWARDS */
+.awards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+.award-card{
+  border-radius:14px;padding:28px 22px;text-align:center;
+  border:1px solid;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.5s,transform 0.5s,box-shadow 0.3s;
+  position:relative;overflow:hidden;
+}
+.award-card.visible{opacity:1;transform:translateY(0);}
+.award-card:hover{transform:translateY(-3px);}
+.aw-blue{
+  background:linear-gradient(135deg,rgba(26,107,255,0.08),rgba(0,0,0,0));
+  border-color:rgba(26,107,255,0.25);
+}
+.aw-blue:hover{box-shadow:0 0 40px rgba(26,107,255,0.18);}
+.aw-lime{
+  background:linear-gradient(135deg,rgba(170,255,0,0.06),rgba(0,0,0,0));
+  border-color:rgba(170,255,0,0.2);
+}
+.aw-lime:hover{box-shadow:0 0 40px rgba(170,255,0,0.12);}
+.award-emoji{font-size:30px;margin-bottom:10px;}
+.award-name{font-size:14px;font-weight:700;margin-bottom:4px;}
+.aw-blue .award-name{color:var(--cobalt3);}
+.aw-lime .award-name{color:var(--lime);}
+.award-year{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:6px;}
+.award-desc{font-size:12px;color:var(--text2);line-height:1.5;}
+
+/* ─── SKILLS ─── */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;}
+.skill-card{
+  background:var(--black4);border:1px solid var(--border);
+  border-radius:14px;padding:26px;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.5s,transform 0.5s,border-color 0.3s,box-shadow 0.3s;
+  position:relative;overflow:hidden;
+}
+.skill-card.visible{opacity:1;transform:translateY(0);}
+
+/* Animated top border per card */
+.sk-c::before{content:'';position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,var(--cobalt),var(--cobalt2),var(--lime));animation:topBorderSlide 3s linear infinite;background-size:200% 100%;}
+.sk-l::before{content:'';position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,var(--lime),var(--lime2),var(--cobalt));animation:topBorderSlide 3s linear infinite reverse;background-size:200% 100%;}
+@keyframes topBorderSlide{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
+
+.skill-card:hover{
+  border-color:rgba(26,107,255,0.3);
+  box-shadow:0 0 40px rgba(26,107,255,0.06);
+}
+
+.sk-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.sk-icon{
+  width:38px;height:38px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.sk-c .sk-icon{background:rgba(26,107,255,0.1);border:1px solid rgba(26,107,255,0.15);}
+.sk-l .sk-icon{background:rgba(170,255,0,0.08);border:1px solid rgba(170,255,0,0.12);}
+.sk-title{font-size:14px;font-weight:600;color:var(--text);}
+
+.sk-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.skt{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  padding:3px 10px;border-radius:3px;border:1px solid;
+  transition:all 0.2s;
+}
+.sk-c .skt{color:var(--cobalt3);border-color:rgba(26,107,255,0.2);background:rgba(26,107,255,0.05);}
+.sk-c .skt:hover{background:rgba(26,107,255,0.12);box-shadow:0 0 8px rgba(26,107,255,0.2);}
+.sk-l .skt{color:var(--lime);border-color:rgba(170,255,0,0.18);background:rgba(170,255,0,0.04);}
+.sk-l .skt:hover{background:rgba(170,255,0,0.09);box-shadow:0 0 8px rgba(170,255,0,0.15);}
+
+.sk-bl{font-size:11px;color:var(--text3);display:flex;justify-content:space-between;margin-bottom:5px;}
+.sk-bt{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;margin-bottom:10px;}
+.sk-bf{height:100%;width:0;border-radius:2px;transition:width 1.2s cubic-bezier(0.25,0.46,0.45,0.94) 0.3s;}
+.skill-card.visible .sk-bf{width:var(--w);}
+.sk-c .sk-bf{background:linear-gradient(90deg,var(--cobalt),var(--cobalt2),var(--lime));}
+.sk-l .sk-bf{background:linear-gradient(90deg,var(--lime),var(--lime2),var(--cobalt3));}
+
+/* ─── CERTS ─── */
+.certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:12px;}
+.cert-card{
+  background:var(--black4);border:1px solid var(--border);
+  border-radius:12px;padding:20px 22px;
+  display:flex;align-items:flex-start;gap:14px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity 0.5s,transform 0.5s,border-color 0.3s,box-shadow 0.3s;
+  position:relative;overflow:hidden;
+}
+.cert-card.visible{opacity:1;transform:translateY(0);}
+.cert-card::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cobalt),transparent);
+  transform:scaleX(0);transform-origin:center;
+  transition:transform 0.4s;
+}
+.cert-card:hover::before{transform:scaleX(1);}
+.cert-card:hover{transform:translateY(-2px);}
+
+/* brand hover colors */
+.cc-aws:hover{border-color:rgba(255,153,0,0.3);box-shadow:0 4px 20px rgba(255,153,0,0.07);}
+.cc-az:hover {border-color:rgba(26,107,255,0.35);box-shadow:0 4px 20px rgba(26,107,255,0.1);}
+.cc-rh:hover {border-color:rgba(237,53,36,0.3);box-shadow:0 4px 20px rgba(237,53,36,0.07);}
+.cc-oci:hover{border-color:rgba(170,255,0,0.25);box-shadow:0 4px 20px rgba(170,255,0,0.06);}
+.cc-it:hover {border-color:rgba(26,107,255,0.3);box-shadow:0 4px 20px rgba(26,107,255,0.08);}
+
+.ci{width:36px;height:36px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;}
+.ci-aws{background:rgba(255,153,0,0.1);border:1px solid rgba(255,153,0,0.2);}
+.ci-az {background:rgba(26,107,255,0.1);border:1px solid rgba(26,107,255,0.2);}
+.ci-rh {background:rgba(237,53,36,0.1);border:1px solid rgba(237,53,36,0.2);}
+.ci-oci{background:rgba(170,255,0,0.08);border:1px solid rgba(170,255,0,0.15);}
+.ci-it {background:rgba(26,107,255,0.1);border:1px solid rgba(26,107,255,0.2);}
+.cn{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.4;}
+.cb{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);}
+
+/* ─── EDUCATION ─── */
+.edu-card{
+  background:var(--black4);border:1px solid var(--border);
+  border-left:2px solid var(--lime);
+  border-radius:14px;padding:32px;
+  display:flex;gap:24px;align-items:flex-start;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.5s,transform 0.5s,box-shadow 0.3s;
+}
+.edu-card.visible{opacity:1;transform:translateY(0);}
+.edu-card:hover{box-shadow:0 0 40px rgba(170,255,0,0.05);}
+.edu-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:rgba(170,255,0,0.08);border:1px solid rgba(170,255,0,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+.edu-deg{font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px;font-family:'Space Grotesk',sans-serif;}
+.edu-sch{font-size:13px;color:var(--text2);margin-bottom:10px;}
+.edu-meta{display:flex;gap:10px;flex-wrap:wrap;}
+.edu-b{font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 12px;border-radius:100px;border:1px solid;}
+.eb-p{color:var(--text3);border-color:var(--border);}
+.eb-g{color:var(--lime);border-color:rgba(170,255,0,0.2);background:rgba(170,255,0,0.05);}
+
+/* ─── CONTACT ─── */
+#contact-section{
+  position:relative;z-index:2;
+  padding:80px 48px;max-width:1100px;margin:0 auto;text-align:center;
+}
+.contact-card{
+  border-radius:20px;padding:60px 40px;
+  position:relative;overflow:hidden;max-width:720px;margin:0 auto;
+  background:var(--black4);
+  border:1px solid var(--border);
+}
+/* Animated border glow */
+.contact-card::before{
+  content:'';position:absolute;inset:-1px;border-radius:21px;
+  background:linear-gradient(135deg,var(--cobalt),var(--lime),var(--cobalt2),var(--lime));
+  background-size:300% 300%;
+  animation:borderGlow 6s linear infinite;
+  z-index:-1;opacity:0.4;
+}
+@keyframes borderGlow{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+.contact-card::after{
+  content:'';position:absolute;inset:1px;border-radius:19px;
+  background:var(--black4);z-index:0;
+}
+.cc-inner{position:relative;z-index:1;}
+.ctitle{
+  font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;
+  margin-bottom:10px;letter-spacing:-1px;
+}
+.ctitle .cx{color:var(--lime);text-shadow:0 0 20px rgba(170,255,0,0.3);}
+.csub{color:var(--text2);margin-bottom:36px;font-size:14px;line-height:1.7;}
+.clinks{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.cl{
+  display:flex;align-items:center;gap:9px;
+  padding:12px 20px;
+  background:rgba(26,107,255,0.05);
+  border:1px solid var(--border);border-radius:8px;
+  color:var(--text2);font-size:12px;text-decoration:none;
+  transition:all 0.2s;
+  font-family:'JetBrains Mono',monospace;
+}
+.cl svg{width:14px;height:14px;flex-shrink:0;}
+.cl:hover{
+  background:rgba(26,107,255,0.12);
+  border-color:var(--cobalt);color:var(--cobalt3);
+  transform:translateY(-2px);
+  box-shadow:0 4px 16px rgba(26,107,255,0.15);
+}
+.cl-lime:hover{
+  background:rgba(170,255,0,0.07);
+  border-color:rgba(170,255,0,0.3);color:var(--lime);
+  box-shadow:0 4px 16px rgba(170,255,0,0.1);
+}
+
+/* ─── FOOTER ─── */
+footer{
+  position:relative;z-index:2;text-align:center;
+  padding:32px 48px;
+  border-top:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);
+  background:rgba(0,0,0,0.7);
+}
+footer .fn{color:var(--cobalt3);}
+footer .fr{color:var(--lime);}
+
+/* ─── DIVIDERS ─── */
+.gd{height:1px;max-width:1100px;margin:0 auto;position:relative;z-index:2;}
+.gd-b{background:linear-gradient(90deg,transparent,var(--cobalt),transparent);}
+.gd-l{background:linear-gradient(90deg,transparent,var(--lime),transparent);}
+.gd-m{background:linear-gradient(90deg,transparent,var(--cobalt),var(--lime),transparent);}
+
+/* ─── UTILS ─── */
+@keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(36px);transition:opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94),transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:768px){
+  nav{padding:12px 20px;} .nav-links{display:none;}
+  #home{padding:100px 20px 60px;}
+  .hero-name{white-space:normal;font-size:clamp(36px,10vw,60px);}
+  .stats-strip{grid-template-columns:repeat(2,1fr);}
+  .sw{padding:64px 20px;}
+  #contact-section{padding:60px 20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-wrap">
+  <div class="bg-grid"></div>
+  <div class="bg-orb orb-c1"></div>
+  <div class="bg-orb orb-c2"></div>
+  <div class="bg-orb orb-l1"></div>
+  <div class="bg-orb orb-l2"></div>
+</div>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="progress"></div>
+<div id="particles"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-dot"></div>
+    <span class="logo-brace">[</span>NK.dev<span class="logo-brace">]</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#achievements">Impact</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#certifications">Certs</a></li>
+    <li><a href="#contact-section" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="home">
+  <div class="hero-content">
+
+    <div class="hero-chip">
+      <div class="chip-dot"></div>
+      <span class="chip-txt">HCLTech · Proximus, Brussels</span>
+      <div class="chip-sep"></div>
+      <span class="chip-sub">NFVi · 60+ nodes · 24/7 HA</span>
+    </div>
+
+    <h1 class="hero-name">
+      <span class="hn-first">Naveen </span><span class="hn-last">Kumar N</span>
+    </h1>
+
+    <p class="hero-role">NFVi Cloud Engineer &nbsp;·&nbsp; Telco Infrastructure &nbsp;·&nbsp; OpenStack Operations &nbsp;·&nbsp; SRE-Aligned Ops</p>
+
+    <div class="hero-tags">
+      <span class="ht ht-blue">OpenStack RHOSP</span>
+      <span class="ht ht-lime">Linux RHEL</span>
+      <span class="ht ht-blue">Cisco ACI</span>
+      <span class="ht ht-lime">Ceph Storage</span>
+      <span class="ht ht-blue">AWS SAA</span>
+      <span class="ht ht-lime">Azure AZ-104</span>
+      <span class="ht ht-blue">ServiceNow ITSM</span>
+      <span class="ht ht-lime">Dynatrace · Splunk</span>
+    </div>
+
+    <div class="terminal">
+      <div class="tbar">
+        <div class="td td-r"></div>
+        <div class="td td-y"></div>
+        <div class="td td-g"></div>
+        <span class="ttitle">naveen@hcltech-proximus:~$</span>
+      </div>
+      <div class="tbody">
+        <span class="tcm to"># NFVi Cloud Engineer — Proximus Telco Production</span>
+        <span class="tp">❯ </span><span class="tc">cat profile.json</span><br>
+        <span class="to"><span class="tk">{</span></span>
+        <span class="to">&nbsp; <span class="tk">"role"</span>: <span class="tv">"NFVi Cloud Engineer"</span>,</span>
+        <span class="to">&nbsp; <span class="tk">"client"</span>: <span class="tv">"Proximus — Belgian Telecom (Brussels)"</span>,</span>
+        <span class="to">&nbsp; <span class="tk">"platform"</span>: <span class="tv">"OpenStack RHOSP · Cisco ACI · Ceph · Linux RHEL"</span>,</span>
+        <span class="to">&nbsp; <span class="tk">"cluster"</span>: <span class="tv">"60+ nodes · 24/7 HA · Production NFVi"</span>,</span>
+        <span class="to">&nbsp; <span class="tk">"vms_migrated"</span>: <span class="tn">2000</span>, <span class="tk">"downtime"</span>: <span class="tv">"zero"</span>,</span>
+        <span class="to">&nbsp; <span class="tk">"incident_reduction"</span>: <span class="tn">"40%"</span>, <span class="tk">"sla_improvement"</span>: <span class="tn">"35%"</span>,</span>
+        <span class="to">&nbsp; <span class="tk">"uptime"</span>: <span class="tn">"99.9%"</span>, <span class="tk">"certifications"</span>: <span class="tn">10</span></span>
+        <span class="to"><span class="tk">}</span></span>
+        <br>
+        <span class="tp">❯ </span><span class="cursor-blink"></span>
+      </div>
+    </div>
+
+    <div class="hero-actions">
+      <a href="Naveen-Kumar N-resume.pdf" class="btn-cobalt" download>
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+        Download Resume
+      </a>
+      <a href="https://linkedin.com/in/naveen-kumar-n-168640280" target="_blank" class="btn-lime">
+        <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="#contact-section" class="btn-ghost">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        Get in Touch
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── TICKER ── -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="tki" style="color:#5B8FFF">OpenStack RHOSP<span class="tdot2" style="background:#1A6BFF"></span></span>
+    <span class="tki" style="color:#AAFF00">Linux RHEL · Bash<span class="tdot2" style="background:#AAFF00"></span></span>
+    <span class="tki" style="color:#5B8FFF">Cisco ACI Fabric<span class="tdot2" style="background:#1A6BFF"></span></span>
+    <span class="tki" style="color:#CCFF33">Ceph OSD Ops<span class="tdot2" style="background:#AAFF00"></span></span>
+    <span class="tki" style="color:#FF7B7B">2,000+ VMs · Zero Downtime<span class="tdot2" style="background:#FF5F5F"></span></span>
+    <span class="tki" style="color:#AAFF00">99.9% Uptime<span class="tdot2" style="background:#AAFF00"></span></span>
+    <span class="tki" style="color:#FBB97A">AWS Certified · AZ-104<span class="tdot2" style="background:#FF9900"></span></span>
+    <span class="tki" style="color:#5B8FFF">Dynatrace · Splunk<span class="tdot2" style="background:#1A6BFF"></span></span>
+    <span class="tki" style="color:#CCFF33">ServiceNow ITSM<span class="tdot2" style="background:#AAFF00"></span></span>
+    <span class="tki" style="color:#5B8FFF">Microsoft North Star 2024 &amp; 2025<span class="tdot2" style="background:#1A6BFF"></span></span>
+    <span class="tki" style="color:#5B8FFF">OpenStack RHOSP<span class="tdot2" style="background:#1A6BFF"></span></span>
+    <span class="tki" style="color:#AAFF00">Linux RHEL · Bash<span class="tdot2" style="background:#AAFF00"></span></span>
+    <span class="tki" style="color:#5B8FFF">Cisco ACI Fabric<span class="tdot2" style="background:#1A6BFF"></span></span>
+    <span class="tki" style="color:#CCFF33">Ceph OSD Ops<span class="tdot2" style="background:#AAFF00"></span></span>
+    <span class="tki" style="color:#FF7B7B">2,000+ VMs · Zero Downtime<span class="tdot2" style="background:#FF5F5F"></span></span>
+    <span class="tki" style="color:#AAFF00">99.9% Uptime<span class="tdot2" style="background:#AAFF00"></span></span>
+    <span class="tki" style="color:#FBB97A">AWS Certified · AZ-104<span class="tdot2" style="background:#FF9900"></span></span>
+    <span class="tki" style="color:#5B8FFF">Dynatrace · Splunk<span class="tdot2" style="background:#1A6BFF"></span></span>
+    <span class="tki" style="color:#CCFF33">ServiceNow ITSM<span class="tdot2" style="background:#AAFF00"></span></span>
+    <span class="tki" style="color:#5B8FFF">Microsoft North Star 2024 &amp; 2025<span class="tdot2" style="background:#1A6BFF"></span></span>
+  </div>
+</div>
+
+<!-- ── STATS ── -->
+<div class="stats-strip reveal" style="margin:0 48px;max-width:1100px;margin-left:auto;margin-right:auto;">
+  <div class="stat-item s1"><div class="stat-shine"></div><span class="stat-icon">☁️</span><div class="stat-num" data-count="2000" data-suffix="+">0</div><div class="stat-label">VMs Migrated</div></div>
+  <div class="stat-item s2"><div class="stat-shine"></div><span class="stat-icon">⚡</span><div class="stat-num" data-count="40" data-suffix="%">0</div><div class="stat-label">Incident Reduction</div></div>
+  <div class="stat-item s3"><div class="stat-shine"></div><span class="stat-icon">🔒</span><div class="stat-num" data-count="99" data-suffix=".9%">0</div><div class="stat-label">Network Uptime</div></div>
+  <div class="stat-item s4"><div class="stat-shine"></div><span class="stat-icon">🏆</span><div class="stat-num" data-count="10">0</div><div class="stat-label">Certifications</div></div>
+</div>
+
+<div class="gd gd-b" style="margin-top:80px;"></div>
+
+<!-- ── EXPERIENCE ── -->
+<div class="sw" id="experience">
+  <div class="ey ey-blue">Work History</div>
+  <h2 class="st">Professional <span style="color:var(--cobalt);text-shadow:0 0 20px rgba(26,107,255,0.4)">Experience</span></h2>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="exp-card">
+        <div class="exp-header">
+          <div class="exp-role">NFVi Cloud Engineer</div>
+          <div class="exp-period">Sep 2023 – Present</div>
+        </div>
+        <div class="exp-company">HCLTech &nbsp;·&nbsp; Madurai, India</div>
+        <div class="exp-proj">⬡ Client: Proximus (Brussels, Belgium) &nbsp;·&nbsp; Telco NFVi Cloud &nbsp;·&nbsp; 60+ node cluster &nbsp;·&nbsp; 24/7 HA</div>
+        <ul class="exp-bullets">
+          <li>Spearheaded migration of <strong>2,000+ VMs</strong> with zero downtime, ensuring uninterrupted telecom operations across production and non-production environments.</li>
+          <li>Executed <strong>scale-in (40+ nodes)</strong> and <strong>scale-out (20+ nodes)</strong> operations, improving cluster efficiency by ~<strong>20%</strong>.</li>
+          <li>Reduced critical incidents by <strong>40%</strong> via Dynatrace/Splunk monitoring and daily health checks in a 24/7 HA environment.</li>
+          <li>Solved <strong>50+ incidents/month</strong> using Linux CLI and OpenStack troubleshooting, improving SLA compliance by <strong>35%</strong>.</li>
+          <li>Managed <strong>100+ OpenStack resources</strong> (Nova / Neutron / Cinder / Glance / Keystone), reducing provisioning time by <strong>30%</strong>.</li>
+          <li>Implemented static port binding across tenant networks, reducing misconfigurations by <strong>25%</strong>.</li>
+          <li>Monitored Cisco ACI fabric (Leaf/Spine), resolving network issues and achieving <strong>99.9% uptime</strong>.</li>
+          <li>Supported volume lifecycle for <strong>500+ instances</strong>, ensuring data reliability and storage performance.</li>
+          <li>Performed <strong>Ceph OSD redeployments</strong> to reduce fragmentation and optimize storage performance.</li>
+          <li>Automated tasks via <strong>cron and Bash scripting</strong>, reducing manual effort by <strong>20%</strong>.</li>
+          <li>Performed firmware upgrades (BIOS/iDRAC) on <strong>50+ HP/Dell servers</strong>, enhancing system stability.</li>
+          <li>Participated in full <strong>cluster upgrade lifecycle</strong> including pre/post-upgrade validation and rollback planning.</li>
+          <li>Partnered with <strong>Cisco, Broadcom, Red Hat vendors</strong> to resolve critical production incidents.</li>
+          <li>Managed ITSM workflows in <strong>ServiceNow</strong> — incident, change, and problem management — maintaining 100% SLA compliance.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:rgba(255,153,0,0.7);box-shadow:0 0 10px rgba(255,153,0,0.4);"></div>
+      <div class="exp-card" style="border-top:1.5px solid rgba(255,153,0,0.3);">
+        <div class="exp-header">
+          <div class="exp-role">AWS Cloud Intern</div>
+          <div class="exp-period" style="color:#FBB97A;background:rgba(255,153,0,0.07);border-color:rgba(255,153,0,0.2);">Jun – Aug 2023</div>
+        </div>
+        <div class="exp-company">HDLC Technologies</div>
+        <div class="exp-proj" style="color:#FBB97A;">⬡ Cloud Infrastructure · AWS</div>
+        <ul class="exp-bullets">
+          <li>Deployed and managed static websites on <strong>Amazon S3</strong> with 99.9% availability.</li>
+          <li>Implemented text analytics and sentiment analysis using <strong>AWS Comprehend</strong> on 100+ sample texts.</li>
+          <li>Applied IAM best practices including RBAC and policy scoping, improving cloud security posture.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:rgba(170,255,0,0.6);box-shadow:0 0 10px rgba(170,255,0,0.3);"></div>
+      <div class="exp-card" style="border-top:1.5px solid rgba(170,255,0,0.2);">
+        <div class="exp-header">
+          <div class="exp-role">Data Analyst</div>
+          <div class="exp-period" style="color:var(--lime2);background:rgba(170,255,0,0.06);border-color:rgba(170,255,0,0.18);">Mar 2022 – May 2023</div>
+        </div>
+        <div class="exp-company">FixWatt · Freelance</div>
+        <div class="exp-proj">⬡ Data & Analytics</div>
+        <ul class="exp-bullets">
+          <li>Created reports and dashboards using <strong>Excel and Power BI</strong> to support business decision-making.</li>
+          <li>Maintained and organized data pipelines for reporting and market research.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="gd gd-m"></div>
+
+<!-- ── ACHIEVEMENTS ── -->
+<div class="sw" id="achievements">
+  <div class="ey ey-lime">Impact Metrics</div>
+  <h2 class="st">Key <span style="color:var(--lime);text-shadow:0 0 20px rgba(170,255,0,0.3)">Achievements</span></h2>
+
+  <div class="ach-grid">
+    <div class="ach-card ac-blue"><div class="ach-val">2,000+</div><div class="ach-label">VMs Migrated<br>Zero Downtime</div></div>
+    <div class="ach-card ac-lime"><div class="ach-val">40%</div><div class="ach-label">Critical Incident<br>Reduction</div></div>
+    <div class="ach-card ac-mix"><div class="ach-val">35%</div><div class="ach-label">SLA Compliance<br>Improvement</div></div>
+    <div class="ach-card ac-blue"><div class="ach-val">30%</div><div class="ach-label">Provisioning Time<br>Reduced</div></div>
+    <div class="ach-card ac-lime"><div class="ach-val">99.9%</div><div class="ach-label">Network Uptime<br>Cisco ACI</div></div>
+    <div class="ach-card ac-mix"><div class="ach-val">500+</div><div class="ach-label">Instance Volumes<br>Managed</div></div>
+    <div class="ach-card ac-blue"><div class="ach-val">50+</div><div class="ach-label">Incidents Resolved<br>Per Month</div></div>
+    <div class="ach-card ac-lime"><div class="ach-val">20%</div><div class="ach-label">Manual Effort<br>Automated Away</div></div>
+  </div>
+
+  <div class="ey ey-lime" style="margin-top:20px;">Recognition</div>
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.5px;margin-bottom:22px;">Awards &amp; <span style="color:var(--lime)">Recognition</span></h3>
+  <div class="awards-grid">
+    <div class="award-card aw-blue">
+      <div class="award-emoji">⭐</div>
+      <div class="award-name">Microsoft North Star Award</div>
+      <div class="award-year">2024</div>
+      <div class="award-desc">Exceptional cloud operations performance on Azure-aligned workloads</div>
+    </div>
+    <div class="award-card aw-blue">
+      <div class="award-emoji">⭐</div>
+      <div class="award-name">Microsoft North Star Award</div>
+      <div class="award-year">2025</div>
+      <div class="award-desc">Second consecutive year — consistent top-tier delivery</div>
+    </div>
+    <div class="award-card aw-lime">
+      <div class="award-emoji">🎖️</div>
+      <div class="award-name">HCLTech 2Good Award</div>
+      <div class="award-year">2024</div>
+      <div class="award-desc">Recognized for going above and beyond in production operations</div>
+    </div>
+  </div>
+</div>
+
+<div class="gd gd-l"></div>
+
+<!-- ── SKILLS ── -->
+<div class="sw" id="skills">
+  <div class="ey ey-blue">Technical Stack</div>
+  <h2 class="st">Skills &amp; <span style="color:var(--cobalt);text-shadow:0 0 20px rgba(26,107,255,0.4)">Expertise</span></h2>
+  <div class="skills-grid">
+
+    <div class="skill-card sk-c">
+      <div class="sk-head"><div class="sk-icon">☁️</div><div class="sk-title">Cloud & Virtualization</div></div>
+      <div class="sk-tags"><span class="skt">OpenStack RHOSP</span><span class="skt">Nova</span><span class="skt">Neutron</span><span class="skt">Cinder</span><span class="skt">Glance</span><span class="skt">Keystone</span><span class="skt">NFVi</span><span class="skt">AWS</span><span class="skt">Azure</span></div>
+      <div class="sk-bl"><span>OpenStack / NFVi</span><span>95%</span></div>
+      <div class="sk-bt"><div class="sk-bf" style="--w:95%"></div></div>
+      <div class="sk-bl"><span>AWS</span><span>80%</span></div>
+      <div class="sk-bt"><div class="sk-bf" style="--w:80%"></div></div>
+    </div>
+
+    <div class="skill-card sk-l">
+      <div class="sk-head"><div class="sk-icon">🐧</div><div class="sk-title">Linux & OS</div></div>
+      <div class="sk-tags"><span class="skt">RHEL</span><span class="skt">Bash Scripting</span><span class="skt">Cron</span><span class="skt">systemd</span><span class="skt">LVM</span><span class="skt">SSH</span></div>
+      <div class="sk-bl"><span>Linux RHEL</span><span>90%</span></div>
+      <div class="sk-bt"><div class="sk-bf" style="--w:90%"></div></div>
+      <div class="sk-bl"><span>Shell Scripting</span><span>78%</span></div>
+      <div class="sk-bt"><div class="sk-bf" style="--w:78%"></div></div>
+    </div>
+
+    <div class="skill-card sk-c">
+      <div class="sk-head"><div class="sk-icon">🌐</div><div class="sk-title">Networking</div></div>
+      <div class="sk-tags"><span class="skt">Cisco ACI</span><span class="skt">APIC</span><span class="skt">BGP</span><span class="skt">AVI LB</span><span class="skt">Static Port Binding</span><span class="skt">Leaf/Spine</span></div>
+      <div class="sk-bl"><span>Cisco ACI / AVI</span><span>85%</span></div>
+      <div class="sk-bt"><div class="sk-bf" style="--w:85%"></div></div>
+    </div>
+
+    <div class="skill-card sk-l">
+      <div class="sk-head"><div class="sk-icon">💾</div><div class="sk-title">Storage</div></div>
+      <div class="sk-tags"><span class="skt">Ceph</span><span class="skt">OSD Redeployment</span><span class="skt">Volume Lifecycle</span><span class="skt">Cinder</span><span class="skt">iDRAC</span></div>
+      <div class="sk-bl"><span>Ceph / Storage Ops</span><span>80%</span></div>
+      <div class="sk-bt"><div class="sk-bf" style="--w:80%"></div></div>
+    </div>
+
+    <div class="skill-card sk-c">
+      <div class="sk-head"><div class="sk-icon">📊</div><div class="sk-title">Monitoring & ITSM</div></div>
+      <div class="sk-tags"><span class="skt">Dynatrace</span><span class="skt">Splunk</span><span class="skt">ServiceNow</span><span class="skt">Panorama</span><span class="skt">AVI Controller</span><span class="skt">NetOps</span></div>
+      <div class="sk-bl"><span>ServiceNow / ITSM</span><span>90%</span></div>
+      <div class="sk-bt"><div class="sk-bf" style="--w:90%"></div></div>
+      <div class="sk-bl"><span>Dynatrace / Splunk</span><span>80%</span></div>
+      <div class="sk-bt"><div class="sk-bf" style="--w:80%"></div></div>
+    </div>
+
+    <div class="skill-card sk-l">
+      <div class="sk-head"><div class="sk-icon">⚙️</div><div class="sk-title">Automation & DevOps</div></div>
+      <div class="sk-tags"><span class="skt">Bash / Cron</span><span class="skt">Git</span><span class="skt">Ansible</span><span class="skt">Terraform</span><span class="skt">Kubernetes</span><span class="skt">Python</span></div>
+      <div class="sk-bl"><span>Bash / Git</span><span>78%</span></div>
+      <div class="sk-bt"><div class="sk-bf" style="--w:78%"></div></div>
+      <div class="sk-bl"><span>Ansible / K8s (Learning)</span><span>50%</span></div>
+      <div class="sk-bt"><div class="sk-bf" style="--w:50%"></div></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="gd gd-b"></div>
+
+<!-- ── CERTIFICATIONS ── -->
+<div class="sw" id="certifications">
+  <div class="ey ey-lime">Credentials</div>
+  <h2 class="st">Certifi<span style="color:var(--lime)">cations</span></h2>
+  <div class="certs-grid">
+    <div class="cert-card cc-aws"><div class="ci ci-aws">☁️</div><div><div class="cn">AWS Solutions Architect – Associate</div><div class="cb">Amazon Web Services</div></div></div>
+    <div class="cert-card cc-aws"><div class="ci ci-aws">☁️</div><div><div class="cn">AWS Certified Cloud Practitioner</div><div class="cb">Amazon Web Services</div></div></div>
+    <div class="cert-card cc-az"><div class="ci ci-az">🔷</div><div><div class="cn">Azure Administrator Associate (AZ-104)</div><div class="cb">Microsoft</div></div></div>
+    <div class="cert-card cc-az"><div class="ci ci-az">🔷</div><div><div class="cn">AZ-900 · AI-900 · SC-900</div><div class="cb">Microsoft Azure Fundamentals</div></div></div>
+    <div class="cert-card cc-rh"><div class="ci ci-rh">🔴</div><div><div class="cn">RHOSP – Red Hat OpenStack</div><div class="cb">Red Hat</div></div></div>
+    <div class="cert-card cc-oci"><div class="ci ci-oci">🟢</div><div><div class="cn">Oracle Cloud & AI Foundations</div><div class="cb">Oracle · OCI</div></div></div>
+    <div class="cert-card cc-it"><div class="ci ci-it">📘</div><div><div class="cn">ITIL® Foundation</div><div class="cb">PeopleCert</div></div></div>
+    <div class="cert-card cc-az"><div class="ci ci-az">🎓</div><div><div class="cn">Cloud Computing</div><div class="cb">NPTEL – IIT Kharagpur</div></div></div>
+  </div>
+</div>
+
+<div class="gd gd-m"></div>
+
+<!-- ── EDUCATION ── -->
+<div class="sw" id="education">
+  <div class="ey ey-lime">Academic Background</div>
+  <h2 class="st">Edu<span style="color:var(--lime)">cation</span></h2>
+  <div class="edu-card reveal">
+    <div class="edu-icon">🎓</div>
+    <div>
+      <div class="edu-deg">Bachelor of Engineering – Electronics &amp; Communication</div>
+      <div class="edu-sch">K.L.N. College of Engineering, Tamil Nadu</div>
+      <div class="edu-meta">
+        <span class="edu-b eb-p">2019 – 2023</span>
+        <span class="edu-b eb-g">CGPA: 8.82 / 10</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="gd gd-b"></div>
+
+<!-- ── CONTACT ── -->
+<div id="contact-section">
+  <div class="ey ey-blue" style="justify-content:center;position:relative;z-index:2;">Let's Connect</div>
+  <div class="contact-card reveal">
+    <div class="contact-card::after"></div>
+    <div class="cc-inner">
+      <div class="ctitle">Get in <span class="cx">Touch</span></div>
+      <p class="csub">Open to Telco Cloud · OpenStack · SRE · Cloud Ops roles<br>Chennai preferred &nbsp;·&nbsp; Remote considered</p>
+      <div class="clinks">
+        <a href="mailto:naganavee2516@gmail.com" class="cl">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          naganavee2516@gmail.com
+        </a>
+        <a href="https://linkedin.com/in/naveen-kumar-n-168640280" target="_blank" class="cl">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/></svg>
+          LinkedIn
+        </a>
+        <a href="tel:+918015380210" class="cl cl-lime">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          +91 80153 80210
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="fn">Naveen Kumar N</span> &nbsp;·&nbsp; <span class="fr">NFVi Cloud Engineer</span> &nbsp;·&nbsp; Madurai, Tamil Nadu &nbsp;·&nbsp; © 2026
+</footer>
+
+<script>
+/* ─ CURSOR ─ */
+const CUR=document.getElementById('cursor'),RING=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  CUR.style.left=mx-6+'px';CUR.style.top=my-6+'px';
+});
+(function lr(){rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;RING.style.left=rx-20+'px';RING.style.top=ry-20+'px';requestAnimationFrame(lr);})();
+document.querySelectorAll('a,button,.skt,.cert-card,.ach-card,.award-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    RING.style.width='56px';RING.style.height='56px';
+    RING.style.borderColor='rgba(170,255,0,0.7)';
+    CUR.style.transform='scale(2.2)';
+  });
+  el.addEventListener('mouseleave',()=>{
+    RING.style.width='40px';RING.style.height='40px';
+    RING.style.borderColor='rgba(26,107,255,0.6)';
+    CUR.style.transform='scale(1)';
+  });
+});
+
+/* ─ PROGRESS ─ */
+const PROG=document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const t=document.documentElement.scrollTop,h=document.documentElement.scrollHeight-window.innerHeight;
+  PROG.style.transform=`scaleX(${t/h})`;
+  document.querySelector('nav').style.padding=t>60?'8px 48px':'14px 48px';
+});
+
+/* ─ PARTICLES ─ */
+const PC=document.getElementById('particles');
+const PCOLS=['#1A6BFF','#2979FF','#5B8FFF','#AAFF00','#CCFF33','#1A6BFF','#AAFF00'];
+for(let i=0;i<40;i++){
+  const p=document.createElement('div');p.className='particle';
+  const s=Math.random()*2+0.5;
+  p.style.cssText=`width:${s}px;height:${s}px;background:${PCOLS[Math.floor(Math.random()*PCOLS.length)]};left:${Math.random()*100}%;animation-duration:${10+Math.random()*16}s;animation-delay:-${Math.random()*24}s;--drift:${(Math.random()-0.5)*200}px;`;
+  PC.appendChild(p);
+}
+
+/* ─ INTERSECTION OBSERVER ─ */
+const OBS=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');OBS.unobserve(e.target);}});
+},{threshold:0.1});
+document.querySelectorAll('.reveal,.tl-item,.skill-card,.cert-card,.award-card,.ach-card,.edu-card').forEach((el,i)=>{
+  el.style.transitionDelay=(i%6)*0.07+'s';OBS.observe(el);
+});
+
+/* ─ COUNT-UP ─ */
+const COBS=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target,target=parseInt(el.dataset.count),suf=el.dataset.suffix||'';
+    let cur=0;const step=target/60;
+    const t=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=Math.floor(cur)+suf;if(cur>=target)clearInterval(t);},16);
+    COBS.unobserve(el);
+  });
+},{threshold:0.5});
+document.querySelectorAll('.stat-num[data-count]').forEach(el=>COBS.observe(el));
+
+/* ─ PARALLAX ─ */
+document.addEventListener('mousemove',e=>{
+  const x=(e.clientX/window.innerWidth-0.5)*20,y=(e.clientY/window.innerHeight-0.5)*20;
+  document.querySelectorAll('.bg-orb').forEach((o,i)=>{
+    const d=(i+1)*0.2;o.style.transform=`translate(${x*d}px,${y*d}px)`;
+  });
+});
+
+/* ─ 3D TILT ─ */
+document.querySelectorAll('.skill-card,.exp-card,.ach-card,.cert-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-0.5,y=(e.clientY-r.top)/r.height-0.5;
+    card.style.transform=`perspective(800px) rotateX(${-y*4}deg) rotateY(${x*4}deg) translateY(-3px)`;
+  });
+  card.addEventListener('mouseleave',()=>{card.style.transform='';});
+});
+</script>
+</body>
+</html>
